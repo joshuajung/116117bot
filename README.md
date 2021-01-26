@@ -12,11 +12,10 @@ The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-
 
 ## Configuration
 
-116117bot reads all configuration from environment variables:
+116117bot reads all configuration from environment variables. Only one is actually required:
 
 | Variable               | Required | Default | Description                                                                                                                                                                                                                                                                   |
 | ---------------------- | :------: | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `PORT`                 |          | `3000`  | The port 116117bot will run on. It is not actively used at this point, but should still be available.                                                                                                                                                                         |
 | `URLS`                 |    ✅    |         | The impfservice.de URLs to be monitored by the bot, comma-separated. Example: `https://123-iz.impfterminservice.de/terminservice/suche/XXXX-XXXX-XXXX/12345/L456,https://123-iz.impfterminservice.de/terminservice/suche/XXXX-XXXX-YYYY/12345/L456` |
 | `PUSHOVER_TOKEN`       |          |         | If you want to receive alerts via Pushover, the app token generated there.                                                                                                                                                                                        |
 | `PUSHOVER_USER`        |          |         | If you want to receive alerts via Pushover, the recipient ID (user or group) generated there.                                                                                                                                                                     |
@@ -25,6 +24,7 @@ The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-
 | `NO_PUPPETEER_SANDBOX` |          | `false` | Set this to `true` to run Puppeteer without a sandbox. This is required for some hosting services.                                                                                                                                                                            |
 | `LOG_HTML`             |          | `false` | Set this to `true` to log raw HTML from polls (if it has changed).                                                                                                                                                                                                            |
 | `HEADLESS`             |          | `false` | Set this to `true` to run Puppeteer in headless mode.                                                                                                                                                                                                                         |
+| `PORT`                 |          | `3000`  | The port 116117bot will run on. It is not actively used at this point, but should still be available.                                                                                                                                                                         |
 
 ## Installing dependencies
 
