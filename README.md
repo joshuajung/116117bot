@@ -35,5 +35,5 @@ $ npm install
 ## Startup
 
 ```sh
-$ npm run
+$ npm start
 ```
