@@ -1,10 +1,7 @@
 import Axios from "axios";
 import express from "express";
 import objectHash from "object-hash";
-import { BrowserContext } from "puppeteer";
-import puppeteer from "puppeteer-extra";
-import StealthPlugin from "puppeteer-extra-plugin-stealth";
-import { Browser } from "puppeteer-extra/dist/puppeteer";
+import puppeteer, { Browser, BrowserContext } from "puppeteer";
 import getConfig, { getUrls, getZipFromUrl } from "./config";
 
 class Impfbot {
@@ -23,7 +20,7 @@ class Impfbot {
     app.get("/", (req, res) => res.send());
     app.listen(this.config.port);
 
-    puppeteer.use(StealthPlugin());
+    // puppeteer.use(StealthPlugin());
     await this.startBrowser();
     this.alertPushover(`Now monitoring ${this.queue.length} URL(s).`, -2);
     this.runLoopStep();
@@ -38,7 +35,7 @@ class Impfbot {
         ? ["--no-sandbox", "--disable-setuid-sandbox"]
         : [],
     });
-    this.context = (await this.browser.createIncognitoBrowserContext()) as any;
+    this.context = await this.browser.createIncognitoBrowserContext();
   };
 
   private limboLoop = () => {
