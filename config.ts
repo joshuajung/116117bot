@@ -24,12 +24,6 @@ const parseEnvInt = (variableName: string, fallback: number): number => {
   return isNaN(envValueInt) ? fallback : envValueInt;
 };
 
-const parseEnvIsoDate = (variableName: string, fallback: Date): Date => {
-  const envValue = process.env[variableName] ?? "";
-  const envValueDate = new Date(envValue);
-  return isNaN(envValueDate.getTime()) ? fallback : envValueDate;
-};
-
 export const getUrls = (): string[] => {
   const urls = getConfig().urls;
   if (!urls) throw "No URLS provided.";
