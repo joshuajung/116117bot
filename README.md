@@ -5,6 +5,8 @@ The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-
 
 🦠 Please use this responsibly to keep it available and functional. 
 
+⚠️ The booking portal has recently changed the user journey: it seems to be no longer possible to generate a booking code when no appointments are available. This may require changes in the bot code as well. I hope it's still helpful as a template for now until I get a chance to look into it in detail.
+
 ## Requirements
 * Node.js (>v14)
 * If you want to receive push notifications for available appointments, a [Pushover](https://pushover.net) account.
