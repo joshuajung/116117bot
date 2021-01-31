@@ -1,26 +1,24 @@
-import Axios from "axios";
+import { default as axios, default as Axios } from "axios";
 import express from "express";
 import objectHash from "object-hash";
-import puppeteer, { Browser, BrowserContext } from "puppeteer";
+import puppeteer, { Browser } from "puppeteer";
 import getConfig, { getUrls, getZipFromUrl } from "./config";
 
 class Impfbot {
   private config = getConfig();
   private browser?: Browser;
-  private context?: BrowserContext;
   private errorCount: number = 0;
   private lastHash: Record<string, string> = {};
   private lastAppointmentsAvailable: Record<string, number> = {};
   private queue: string[] = getUrls();
 
   public boot = async () => {
-    console.log("Booting Impfbot");
+    console.log("Booting 116117bot");
 
     const app = express();
     app.get("/", (req, res) => res.send());
     app.listen(this.config.port);
 
-    // puppeteer.use(StealthPlugin());
     await this.startBrowser();
     this.alertPushover(`Now monitoring ${this.queue.length} URL(s).`, -2);
     this.runLoopStep();
@@ -31,11 +29,11 @@ class Impfbot {
     this.browser = await puppeteer.launch({
       executablePath: this.config.chromiumExecutablePath,
       headless: this.config.headless,
+      defaultViewport: null,
       args: this.config.noPuppeteerSandbox
         ? ["--no-sandbox", "--disable-setuid-sandbox"]
         : [],
     });
-    this.context = await this.browser.createIncognitoBrowserContext();
   };
 
   private limboLoop = () => {
@@ -47,30 +45,11 @@ class Impfbot {
     const url = this.queue.shift();
     try {
       if (!url) throw "No URL in queue.";
-      if (!this.context) throw "No context available.";
-      const allPages = await this.context?.pages();
-      const page =
-        allPages
-          ?.filter((page) => !page.isClosed())
-          .find((page) => page.url() == url) ?? (await this.context?.newPage());
-      await page.goto(url);
-      const terminSuchenButtonSelector =
-        ".ets-corona-search-overlay-inner .btn-magenta";
-      await page.waitForSelector(terminSuchenButtonSelector, {
-        timeout: 2 * 60 * 1000,
-      });
-      await awaitTimeout(2000);
-      await page.click(terminSuchenButtonSelector);
-      await page.waitForResponse(
-        (res) => res.url().indexOf("ersttermin") !== -1,
-        { timeout: 10 * 1000 }
-      );
-      const errorMessages = await page.$$(".alert-danger");
-      if (errorMessages.length > 0)
-        throw "Danger Alert found in HTML, likely error 429.";
-      const appointmentsAvailable = (await page.$$(".ets-slot-button")).length;
-      const html = (await page.content()) ?? "";
-      const htmlHash = this.hashSignificantHtml(html);
+      const [
+        appointmentsAvailable,
+        htmlHash,
+        html,
+      ] = await this.findAppointmentsInUrl(url);
       this.announceNewResults(htmlHash, url, appointmentsAvailable, html);
       this.lastHash[url] = htmlHash;
       this.lastAppointmentsAvailable[url] = appointmentsAvailable;
@@ -93,6 +72,62 @@ class Impfbot {
     }
   };
 
+  private findAppointmentsInUrl = async (
+    url: string
+  ): Promise<[number, string, string]> => {
+    if (url.indexOf("impftermine/service") !== -1) {
+      // the entered URL is a "new" URL (finding appointments before having a booking code)
+      const zip = getZipFromUrl(url);
+      const vaccinations = (
+        await axios.get(
+          "https://001-iz.impfterminservice.de/assets/static/its/vaccination-list.json"
+        )
+      ).data
+        .map((v: any) => v.qualification)
+        .join(",");
+      const checkUrl =
+        url.substr(0, 36) +
+        "rest/suche/termincheck?plz=" +
+        zip +
+        "&leistungsmerkmale=" +
+        vaccinations;
+      const availableResponse = (await axios.get(checkUrl)).data;
+      return [
+        availableResponse["termineVorhanden"] ? 1 : 0,
+        objectHash(availableResponse),
+        JSON.stringify(availableResponse),
+      ];
+    } else if (url.indexOf("terminservice/suche") !== -1) {
+      // the entered URL is an "old" URL (finding appointment after having a booking code)
+      const page = await this.browser!.defaultBrowserContext().newPage();
+      await page.goto(url);
+      const terminSuchenButtonSelector =
+        ".ets-corona-search-overlay-inner .btn-magenta";
+      await page.waitForSelector(terminSuchenButtonSelector, {
+        timeout: 2 * 60 * 1000,
+      });
+      await awaitTimeout(2000);
+      await page.click(terminSuchenButtonSelector);
+      await page.waitForResponse(
+        (res) => res.url().indexOf("ersttermin") !== -1,
+        { timeout: 10 * 1000 }
+      );
+      const errorMessages = await page.$$(".alert-danger");
+      if (errorMessages.length > 0)
+        throw "Danger Alert found in HTML, likely error 429.";
+      const appointmentsAvailable = (await page.$$(".ets-slot-button")).length;
+      const html = await page.content();
+      await page.close();
+      return [
+        appointmentsAvailable,
+        objectHash(html.split("<body").slice(-1)),
+        html,
+      ];
+    } else {
+      throw "The URL type could not be identified.";
+    }
+  };
+
   private alertPushover = async (message: string, priority: number) => {
     if (this.config.pushover.token && this.config.pushover.user) {
       try {
@@ -107,16 +142,6 @@ class Impfbot {
         console.error(error);
         setTimeout(() => this.alertPushover(message, priority), 10000);
       }
-    }
-  };
-
-  private hashSignificantHtml = (fullHtml: string): string => {
-    try {
-      const hashObject = fullHtml.split("<body").slice(-1);
-      const hash = objectHash(hashObject);
-      return hash;
-    } catch (e) {
-      return "INVALID_HASH";
     }
   };
 
