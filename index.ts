@@ -90,7 +90,9 @@ class Impfbot {
         "rest/suche/termincheck?plz=" +
         zip +
         "&leistungsmerkmale=" +
-        vaccinations;
+        vaccinations +
+        "&cachebuster=" +
+        Date.now();
       const availableResponse = (await axios.get(checkUrl)).data;
       return [
         availableResponse["termineVorhanden"] ? 1 : 0,
