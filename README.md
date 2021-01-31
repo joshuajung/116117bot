@@ -5,12 +5,17 @@ The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-
 
 🦠 Please use this responsibly to keep it available and functional. 
 
-⚠️ The booking portal has recently changed the user journey: it seems to be no longer possible to generate a booking code when no appointments are available. This may require changes in the bot code as well. I hope it's still helpful as a template for now until I get a chance to look into it in detail.
-
 ## Requirements
 * Node.js (>v14)
 * If you want to receive push notifications for available appointments, a [Pushover](https://pushover.net) account.
-* One or multiple registration code URLs for impfterminservice.de (freely available if conditions for vaccination are met).
+* On or multiple URLs to be monitored (see below). 
+
+## Input URLs
+
+116117bot requires one or multiple URLs to be monitored as its input. Right now, two types of URLs are supported:
+
+1. URLs like `https://123-iz.impfterminservice.de/impftermine/service?plz=12345`. You are redirected to these in the browser after you have selected a location for vaccination on impfterminservice.de. You can copy them from the browser address bar. 
+2. URLs like `https://123-iz.impfterminservice.de/terminservice/suche/XXXX-XXXX-XXXX/12345/L456`. These are provided via e-mail after elegibility for a vaccination has been confirmed. 
 
 ## Configuration
 
@@ -18,7 +23,7 @@ The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-
 
 | Variable               | Required | Default | Description                                                                                                                                                                                                                                                                   |
 | ---------------------- | :------: | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `URLS`                 |    ✅    |         | The impfservice.de URLs to be monitored by the bot, comma-separated. Example: `https://123-iz.impfterminservice.de/terminservice/suche/XXXX-XXXX-XXXX/12345/L456,https://123-iz.impfterminservice.de/terminservice/suche/XXXX-XXXX-YYYY/12345/L456` |
+| `URLS`                 |    ✅    |         | The URLs to be monitored (see above). If you provide more than one separated by commas, they will be checked round-robin style. |
 | `PUSHOVER_TOKEN`       |          |         | If you want to receive alerts via Pushover, the app token generated there.                                                                                                                                                                                        |
 | `PUSHOVER_USER`        |          |         | If you want to receive alerts via Pushover, the recipient ID (user or group) generated there.                                                                                                                                                                     |
 | `TIMEOUT_REGULAR`      |          | `300`   | The number of seconds 116117bot will wait between polls.                                                                                                                                                                                                                      |
