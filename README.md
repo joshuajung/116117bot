@@ -5,6 +5,10 @@ The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-
 
 🦠 Please use this responsibly to keep it available and functional. 
 
+## Alternatives
+* [query_116117.sh](https://gist.github.com/116117/068a954badf4d3d2fc6e7ee599ae900d): query the rest api from the commandline
+  * TODO: push-notifications
+
 ## Requirements
 * Node.js (>v14)
 * If you want to receive push notifications for available appointments, a [Pushover](https://pushover.net) account.
