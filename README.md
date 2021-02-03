@@ -5,6 +5,9 @@ The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-
 
 🦠 Please use this responsibly to keep it available and functional. 
 
+## You may also like…
+…my project [Impfterminmonitor.de](https://www.impfterminmonitor.de), which provides an easy way to track appointment availability using a clean web interface.
+
 ## Requirements
 * Node.js (>v14)
 * If you want to receive push notifications for available appointments, a [Pushover](https://pushover.net) account.
