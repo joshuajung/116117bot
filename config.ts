@@ -13,7 +13,7 @@ const getConfig = () => {
     chromiumExecutablePath: process.env.CHROMIUM_EXECUTABLE_PATH,
     noPuppeteerSandbox: !!process.env.NO_PUPPETEER_SANDBOX,
     logHtml: !!process.env.LOG_HTML,
-    headless: !!process.env.HEADLESS,
+    headless: process.env.HEADLESS?.toLowerCase() === 'false',
   };
 };
 export default getConfig;

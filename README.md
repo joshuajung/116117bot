@@ -3,7 +3,7 @@
 ## What is this?
 The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-19 vaccination appointments for a wide range of German states. Unfortunately, it does not alert registered users when appointments become available, so users are required to manually monitor it. This is a proof of concept for a simple [Puppeteer](https://github.com/puppeteer/puppeteer)-powered bot that monitors the site and alerts via STDOUT and optionally push notification once appointments are available.
 
-🦠 Please use this responsibly to keep it available and functional. 
+🦠 Please use this responsibly to keep it available and functional.
 
 ## You may also like…
 …my project [Impfterminmonitor.de](https://www.impfterminmonitor.de), which provides an easy way to track appointment availability using a clean web interface.
@@ -11,14 +11,14 @@ The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-
 ## Requirements
 * Node.js (>v14)
 * If you want to receive push notifications for available appointments, a [Pushover](https://pushover.net) account.
-* On or multiple URLs to be monitored (see below). 
+* On or multiple URLs to be monitored (see below).
 
 ## Input URLs
 
 116117bot requires one or multiple URLs to be monitored as its input. Right now, two types of URLs are supported:
 
-1. URLs like `https://123-iz.impfterminservice.de/impftermine/service?plz=12345`. You are redirected to these in the browser after you have selected a location for vaccination on impfterminservice.de. You can copy them from the browser address bar. 
-2. URLs like `https://123-iz.impfterminservice.de/terminservice/suche/XXXX-XXXX-XXXX/12345/L456`. These are provided via e-mail after elegibility for a vaccination has been confirmed. 
+1. URLs like `https://123-iz.impfterminservice.de/impftermine/service?plz=12345`. You are redirected to these in the browser after you have selected a location for vaccination on impfterminservice.de. You can copy them from the browser address bar.
+2. URLs like `https://123-iz.impfterminservice.de/terminservice/suche/XXXX-XXXX-XXXX/12345/L456`. These are provided via e-mail after elegibility for a vaccination has been confirmed.
 
 ## Configuration
 
@@ -33,7 +33,7 @@ The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-
 | `TIMEOUT_ERROR`        |          | `300`   | The number of seconds 116117bot will pause in case an error has been encountered during a poll.                                                                                                                                                                               |
 | `NO_PUPPETEER_SANDBOX` |          | `false` | Set this to `true` to run Puppeteer without a sandbox. This is required for some hosting services.                                                                                                                                                                            |
 | `LOG_HTML`             |          | `false` | Set this to `true` to log raw HTML from polls (if it has changed).                                                                                                                                                                                                            |
-| `HEADLESS`             |          | `false` | Set this to `true` to run Puppeteer in headless mode.                                                                                                                                                                                                                         |
+| `HEADLESS`             |          | `true` | Set this to `false` to run Puppeteer in headless mode.                                                                                                                                                                                                                         |
 | `PORT`                 |          | `3000`  | The port 116117bot will run on. It is not actively used at this point, but should still be available.                                                                                                                                                                         |
 
 ## Installing dependencies
