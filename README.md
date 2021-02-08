@@ -64,3 +64,7 @@ Run the docker container:
 ```sh
 $ docker run --name 116117bot -e URLS="YourUrlHere" 116117bot
 ```
+
+## Contributing
+
+While PRs to this repo are very welcome, please treat it more as a template for your own expriments than as a single point of truth. My time with this project is limited, so it may take a few days until I can review and merge changes. Before you open a PR, kindly run `npm run prettify` once to format your code.
