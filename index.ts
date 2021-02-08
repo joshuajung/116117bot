@@ -15,11 +15,12 @@ class Impfbot {
   // Request configuration with default values
   private requestConfig = {
     headers: {
-      'User-Agent': '116117bot / 0.1.0 Unofficial bot to fetch available appointments from impfterminservice',
-      'Connection': 'close',
-      'Content-Type': 'application/json'
+      "User-Agent":
+        "116117bot / 0.1.0 Unofficial bot to fetch available appointments from impfterminservice",
+      Connection: "close",
+      "Content-Type": "application/json",
     },
-  }
+  };
 
   public boot = async () => {
     console.log("Booting 116117bot");
@@ -103,7 +104,8 @@ class Impfbot {
         vaccinations +
         "&cachebuster=" +
         Date.now();
-      const availableResponse = (await axios.get(checkUrl, this.requestConfig)).data;
+      const availableResponse = (await axios.get(checkUrl, this.requestConfig))
+        .data;
       return [
         availableResponse["termineVorhanden"] ? 1 : 0,
         objectHash(availableResponse),
