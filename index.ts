@@ -12,6 +12,15 @@ class Impfbot {
   private lastAppointmentsAvailable: Record<string, number> = {};
   private queue: string[] = getUrls();
 
+  // Request configuration with default values
+  private requestConfig = {
+    headers: {
+      'User-Agent': '116117bot / 0.1.0 Unofficial bot to fetch available appointments from impfterminservice',
+      'Connection': 'close',
+      'Content-Type': 'application/json'
+    },
+  }
+
   public boot = async () => {
     console.log("Booting 116117bot");
 
@@ -80,7 +89,8 @@ class Impfbot {
       const zip = getZipFromUrl(url);
       const vaccinations = (
         await axios.get(
-          "https://001-iz.impfterminservice.de/assets/static/its/vaccination-list.json"
+          "https://001-iz.impfterminservice.de/assets/static/its/vaccination-list.json",
+          this.requestConfig
         )
       ).data
         .map((v: any) => v.qualification)
@@ -93,7 +103,7 @@ class Impfbot {
         vaccinations +
         "&cachebuster=" +
         Date.now();
-      const availableResponse = (await axios.get(checkUrl)).data;
+      const availableResponse = (await axios.get(checkUrl, this.requestConfig)).data;
       return [
         availableResponse["termineVorhanden"] ? 1 : 0,
         objectHash(availableResponse),
