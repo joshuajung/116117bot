@@ -47,11 +47,3 @@ $ npm install
 ```sh
 $ npm start
 ```
-
-## Example startup
-
-The following call tries to fetch data for zip code 12345:
-
-```sh
-URLS="https://123-iz.impfterminservice.de/impftermine/service\?plz\=12345" npm start
-```
