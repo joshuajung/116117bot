@@ -57,5 +57,5 @@ $ docker build -t 116117bot .
 
 Run the docker container:
 ```sh
-$ docker run --name 116117bot -e URLS="YourUrlHere" -it -e HEADLESS=true -e NO_PUPPETEER_SANDBOX=true 116117bot
+$ docker run --name 116117bot -e URLS="YourUrlHere" 116117bot
 ```
