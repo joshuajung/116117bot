@@ -12,16 +12,6 @@ class Impfbot {
   private lastAppointmentsAvailable: Record<string, number> = {};
   private queue: string[] = getUrls();
 
-  // Request configuration with default values
-  private requestConfig = {
-    headers: {
-      "User-Agent":
-        "116117bot / 0.1.0 Unofficial bot to fetch available appointments from impfterminservice",
-      Connection: "close",
-      "Content-Type": "application/json",
-    },
-  };
-
   public boot = async () => {
     console.log("Booting 116117bot");
 
@@ -86,12 +76,11 @@ class Impfbot {
     url: string
   ): Promise<[number, string, string]> => {
     if (url.indexOf("impftermine/service") !== -1) {
-      // the entered URL is a "new" URL (finding appointments before having a booking code)
+      // the entered URL is a pre-code URL (finding appointments before having a booking code)
       const zip = getZipFromUrl(url);
       const vaccinations = (
         await axios.get(
-          "https://001-iz.impfterminservice.de/assets/static/its/vaccination-list.json",
-          this.requestConfig
+          "https://001-iz.impfterminservice.de/assets/static/its/vaccination-list.json"
         )
       ).data
         .map((v: any) => v.qualification)
@@ -104,32 +93,42 @@ class Impfbot {
         vaccinations +
         "&cachebuster=" +
         Date.now();
-      const availableResponse = (await axios.get(checkUrl, this.requestConfig))
-        .data;
+      const availableResponse = (await axios.get(checkUrl)).data;
       return [
         availableResponse["termineVorhanden"] ? 1 : 0,
         objectHash(availableResponse),
         JSON.stringify(availableResponse),
       ];
-    } else if (url.indexOf("terminservice/suche") !== -1) {
-      // the entered URL is an "old" URL (finding appointment after having a booking code)
+    } else if (url.indexOf("impftermine/suche") !== -1) {
+      // the entered URL is an post-code URL (finding appointment after having a booking code)
       const page = await this.browser!.defaultBrowserContext().newPage();
-      await page.goto(url);
-      const terminSuchenButtonSelector =
-        ".ets-corona-search-overlay-inner .btn-magenta";
-      await page.waitForSelector(terminSuchenButtonSelector, {
-        timeout: 2 * 60 * 1000,
+      // We intercept requests to a specific URL that would sometimes result in a 429
+      await page.setRequestInterception(true);
+      page.on("request", (request) => {
+        if (request.url().indexOf("buchung") !== -1) {
+          console.log("aborting");
+          request.respond({ status: 404, body: "{}" });
+        } else request.continue();
       });
-      await awaitTimeout(2000);
+      //
+      await page.goto(url);
+      await awaitTimeout(1000);
+      const terminSuchenButtonSelector =
+        ".its-search-step-content .btn-magenta";
+      try {
+        await page.waitForSelector(terminSuchenButtonSelector, {
+          timeout: 2 * 60 * 1000,
+        });
+      } catch (e) {
+        throw "Termin suchen button not found, likely error 429.";
+      }
       await page.click(terminSuchenButtonSelector);
       await page.waitForResponse(
-        (res) => res.url().indexOf("ersttermin") !== -1,
+        (res) => res.url().indexOf("terminpaare") !== -1,
         { timeout: 10 * 1000 }
       );
-      const errorMessages = await page.$$(".alert-danger");
-      if (errorMessages.length > 0)
-        throw "Danger Alert found in HTML, likely error 429.";
-      const appointmentsAvailable = (await page.$$(".ets-slot-button")).length;
+      const appointmentsAvailable =
+        (await page.$$(".its-slot-pair-search-radio-wrapper")).length - 1;
       const html = await page.content();
       await page.close();
       return [

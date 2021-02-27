@@ -21,7 +21,7 @@ The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-
 116117bot requires one or multiple URLs to be monitored as its input. Right now, two types of URLs are supported:
 
 1. URLs like `https://123-iz.impfterminservice.de/impftermine/service?plz=12345`. You are redirected to these in the browser after you have selected a location for vaccination on impfterminservice.de. You can copy them from the browser address bar.
-2. URLs like `https://123-iz.impfterminservice.de/terminservice/suche/XXXX-XXXX-XXXX/12345/L456`. These are provided via e-mail after elegibility for a vaccination has been confirmed.
+2. URLs like `https://123-iz.impfterminservice.de/terminservice/suche/XXXX-XXXX-XXXX/12345/`. These are provided via e-mail after elegibility for a vaccination has been confirmed.
 
 ## Configuration
 

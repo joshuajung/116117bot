@@ -39,8 +39,8 @@ export const getUrls = (): string[] => {
 export const getZipFromUrl = (url: string): string => {
   if (url.indexOf("impftermine/service") !== -1) {
     return url.substr(-5, 5);
-  } else if (url.indexOf("terminservice/suche") !== -1) {
-    return url.substr(71, 5);
+  } else if (url.indexOf("impftermine/suche") !== -1) {
+    return url.substr(69, 5);
   } else {
     throw "Could not get ZIP from URL.";
   }
