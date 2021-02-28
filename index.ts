@@ -1,7 +1,9 @@
 import { default as axios, default as Axios } from "axios";
 import express from "express";
 import objectHash from "object-hash";
-import puppeteer, { Browser } from "puppeteer";
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
+import { Browser } from "puppeteer-extra/dist/puppeteer";
 import getConfig, { getUrls, getZipFromUrl } from "./config";
 
 class Impfbot {
@@ -26,13 +28,18 @@ class Impfbot {
 
   private startBrowser = async () => {
     this.browser?.close();
+    puppeteer.use(StealthPlugin());
+    const defaultArgs = ["--window-size=1600,1200"];
     this.browser = await puppeteer.launch({
       executablePath: this.config.chromiumExecutablePath,
       headless: this.config.headless,
       defaultViewport: null,
-      args: this.config.noPuppeteerSandbox
-        ? ["--no-sandbox", "--disable-setuid-sandbox"]
-        : [],
+      args: [
+        ...defaultArgs,
+        ...(this.config.noPuppeteerSandbox
+          ? ["--no-sandbox", "--disable-setuid-sandbox"]
+          : []),
+      ],
     });
   };
 
@@ -105,14 +112,14 @@ class Impfbot {
       // We intercept requests to a specific URL that would sometimes result in a 429
       await page.setRequestInterception(true);
       page.on("request", (request) => {
+        if (request.url().indexOf("terminpaare") !== -1) {
+        }
         if (request.url().indexOf("buchung") !== -1) {
-          console.log("aborting");
           request.respond({ status: 404, body: "{}" });
         } else request.continue();
       });
       //
       await page.goto(url);
-      await awaitTimeout(1000);
       const terminSuchenButtonSelector =
         ".its-search-step-content .btn-magenta";
       try {
@@ -122,7 +129,8 @@ class Impfbot {
       } catch (e) {
         throw "Termin suchen button not found, likely error 429.";
       }
-      await page.click(terminSuchenButtonSelector);
+      const terminSuchenButton = await page.$(terminSuchenButtonSelector);
+      await terminSuchenButton?.click();
       await page.waitForResponse(
         (res) => res.url().indexOf("terminpaare") !== -1,
         { timeout: 10 * 1000 }

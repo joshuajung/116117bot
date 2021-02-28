@@ -36,7 +36,7 @@ The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-
 | `TIMEOUT_ERROR`        |          | `300`   | The number of seconds 116117bot will pause in case an error has been encountered during a poll.                                 |
 | `NO_PUPPETEER_SANDBOX` |          | `false` | Set this to `true` to run Puppeteer without a sandbox. This is required for some hosting services.                              |
 | `LOG_HTML`             |          | `false` | Set this to `true` to log raw HTML from polls (if it has changed).                                                              |
-| `HEADLESS`             |          | `true`  | Set this to `false` to not run Puppeteer in headless mode.                                                                      |
+| `HEADLESS`             |          | `false` | Set this to `true` to run Puppeteer in headless mode.                                                                           |
 | `PORT`                 |          | `3000`  | The port 116117bot will run on. It is not actively used at this point, but should still be available.                           |
 
 ## Installing dependencies
