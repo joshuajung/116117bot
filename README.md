@@ -14,7 +14,7 @@ The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-
 
 - Node.js (>v14)
 - If you want to receive push notifications for available appointments, a [Pushover](https://pushover.net) account.
-- On or multiple URLs to be monitored (see below).
+- One or multiple URLs to be monitored (see below).
 
 ## Input URLs
 
