@@ -108,6 +108,9 @@ class Impfbot {
       ];
     } else if (url.indexOf("impftermine/suche") !== -1) {
       // the entered URL is an post-code URL (finding appointment after having a booking code)
+      console.warn(
+        "It is not recommended to monitor this kind of URL, as it immediately results in appointment reservations, reducing the number of appointments available to the public. Please see Readme."
+      );
       const page = await this.browser!.defaultBrowserContext().newPage();
       // We intercept requests to a specific URL that would sometimes result in a 429
       await page.setRequestInterception(true);

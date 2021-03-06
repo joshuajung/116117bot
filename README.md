@@ -4,7 +4,7 @@
 
 The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-19 vaccination appointments for a wide range of German states. Unfortunately, it does not alert registered users when appointments become available, so users are required to manually monitor it. This is a proof of concept for a simple [Puppeteer](https://github.com/puppeteer/puppeteer)-powered bot that monitors the site and alerts via STDOUT and optionally push notification once appointments are available.
 
-🦠 Please use this responsibly to keep it available and functional.
+🦠 The 116117 booking engine changes regularly and this bot may be non-functional. It is more intended as a POC and inspiration for own experiments than as a single point of truth, best practice or ready-for-use script. Please use it responsibly and read the complete Readme beforehand. PRs and issues will only be monitored sporadically.
 
 ## You may also like…
 
@@ -21,7 +21,7 @@ The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-
 116117bot requires one or multiple URLs to be monitored as its input. Right now, two types of URLs are supported:
 
 1. URLs like `https://123-iz.impfterminservice.de/impftermine/service?plz=12345`. You are redirected to these in the browser after you have selected a location for vaccination on impfterminservice.de. You can copy them from the browser address bar.
-2. URLs like `https://123-iz.impfterminservice.de/terminservice/suche/XXXX-XXXX-XXXX/12345/`. These are provided via e-mail after elegibility for a vaccination has been confirmed.
+2. URLs like `https://123-iz.impfterminservice.de/terminservice/suche/XXXX-XXXX-XXXX/12345/`. These are provided via e-mail after elegibility for a vaccination has been confirmed. _Attention:_ Since a recent change of the booking engine, monitoring URLs like this immediately results in reserved appointments, making them unavailable to the public. I therefore advise against monitoring personalized URLs like this one using the bot.
 
 ## Configuration
 
@@ -64,7 +64,3 @@ Run the docker container:
 ```sh
 $ docker run --name 116117bot -e URLS="YourUrlHere" 116117bot
 ```
-
-## Contributing
-
-While PRs to this repo are very welcome, please treat it more as a template for your own expriments than as a single point of truth. My time with this project is limited, so it may take a few days until I can review and merge changes. Before you open a PR, kindly run `npm run prettify` once to format your code.
