@@ -4,7 +4,7 @@
 
 The [116117 Impfterminservice](https://www.impfterminservice.de) provides COVID-19 vaccination appointments for a wide range of German states. Unfortunately, it does not alert registered users when appointments become available, so users are required to manually monitor it. This is a proof of concept for a simple [Puppeteer](https://github.com/puppeteer/puppeteer)-powered bot that monitors the site and alerts via STDOUT and optionally push notification once appointments are available.
 
-🦠 The 116117 booking engine changes regularly and this bot may be non-functional. It is more intended as a POC and inspiration for own experiments than as a single point of truth, best practice or ready-for-use script. Please use it responsibly and read the complete Readme beforehand. PRs and issues will only be monitored sporadically.
+**🦠 The 116117 booking engine changes regularly and this bot may be non-functional. It is more intended as a proof-of-concept and inspiration for own experiments than as a single point of truth, best practice or ready-for-use script. Please use it responsibly and read the complete Readme beforehand. PRs and issues will only be monitored sporadically.**
 
 ## You may also like…
 
