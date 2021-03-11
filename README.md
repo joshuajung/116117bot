@@ -2,7 +2,7 @@
 
 ## 🔥 Current status
 
-This script has been largely unfunctional since March 9, when Impfterminservice.de introduced a bunch of anti-scraping measures.
+This script has been largely broken since March 9, when Impfterminservice.de introduced a bunch of anti-scraping measures.
 
 ## What is this?
 
